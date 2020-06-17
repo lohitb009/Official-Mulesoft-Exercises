@@ -1,5 +1,0 @@
-authenticated.users=[{"id"\:"8c54e193-0d40-42b5-8fb5-b37e82f7da69","token"\:"7ed32d28-50b1-4b42-981a-7dad334adede","userId"\:"lohit09","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/"}]
-current.token=7ed32d28-50b1-4b42-981a-7dad334adede
-current.user=lohit09
-eclipse.preferences.version=1
-expiration.time=7

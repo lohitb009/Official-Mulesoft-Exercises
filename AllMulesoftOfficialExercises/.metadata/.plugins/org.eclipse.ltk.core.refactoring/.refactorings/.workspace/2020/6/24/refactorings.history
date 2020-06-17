@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;training4-american-ws&apos;" deleteContents="true" description="Delete resource &apos;training4-american-ws&apos;" element1="/training4-american-ws" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1591973097821"/>&#x0A;<refactoring comment="Delete resource &apos;wt4-4_training4-american-ws_solution&apos;" deleteContents="true" description="Delete resource &apos;wt4-4_training4-american-ws_solution&apos;" element1="/wt4-4_training4-american-ws_solution" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1591973291869"/>
-</session>
