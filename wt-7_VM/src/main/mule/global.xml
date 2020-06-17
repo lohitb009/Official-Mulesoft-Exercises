@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="6b77187c-ad3d-44b9-9c0a-93e98aee1801" >
+		<http:listener-connection host="0.0.0.0" port="8090" />
+	</http:listener-config>
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="e52d1e85-6c87-40ca-8353-f9eb66c501e5" >
+		<vm:queues >
+			<vm:queue queueName="goodbye" />
+		</vm:queues>
+	</vm:config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="6a04482b-8c47-49e1-8119-ea6957175565" >
+		<salesforce:cached-basic-connection username="lohit.bhambri@lhh.com" password="Punjab@123" securityToken="EwSYsLRzSS8sIzhHtda0Gsd9" url="https://test.salesforce.com/services/Soap/u/46.0" >
+			<salesforce:advanced-reconnection-params />
+		</salesforce:cached-basic-connection>
+	</salesforce:sfdc-config>
+
+
+
+
+</mule>

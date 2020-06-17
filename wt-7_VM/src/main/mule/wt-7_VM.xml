@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<flow name="helloFlow" doc:id="ef83ffb1-c4c7-4471-aea1-02ca8b59175d" >
+		<http:listener doc:name="GET:localhost:8090/hello" doc:id="0af5e508-e0e1-4f37-bd4f-dfc558c651fb" config-ref="HTTP_Listener_config" path="/hello" allowedMethods="GET">
+			<http:response reasonPhrase="Hurray!!">
+			</http:response>
+		</http:listener>
+		<flow-ref doc:name="Flow Reference: call subflow" doc:id="54943e2e-efaa-45de-b71b-3336e0a32edd" name="wt-6Sub_Flow"/>
+		<vm:publish queueName="goodbye" doc:name="Publish" doc:id="c5cec0e8-c3f3-4ac5-a6d3-6cfffe29aeb9" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="407eb47e-b399-4dfc-857c-13fb19a123b5" message="#[payload]"/>
+	</flow>
+	<sub-flow name="wt-6Sub_Flow" doc:id="9e490fd3-c142-45e8-9699-d7ae990056ea" >
+		<set-variable value="#[(attributes.queryParams.fname as String default 'NULL' ++ &quot; &quot; ++ 
+ attributes.queryParams.lname as String default 'NULL') as String]" doc:name="fullName" doc:id="bac4695c-163f-4731-8ed1-ec292ff70fdc" variableName="fullName" />
+		<set-payload value="#['Flow HELLO:1 __ ' ++ vars.fullName as String]" doc:name="Hello" doc:id="8eb64cee-03bb-4794-bab9-75a9a3fd5f35" />
+	</sub-flow>
+	<flow name="goodbyeFlow" doc:id="0e33755b-b173-491d-b358-947f7455fdf4" >
+		<vm:listener queueName="goodbye" doc:name="Listener" doc:id="cbc36caf-2317-43d0-b967-568f877effb9" config-ref="VM_Config"/>
+		<set-variable value="#['Goodbye flow ' ++ payload as String]" doc:name="goodbye" doc:id="4290097b-64df-4922-ad78-f9de7ffc4597" variableName="goodbye" />
+		<set-payload doc:name="Goodbye" doc:id="a4a5eafa-1a7a-4c0e-8502-a9358d38ae8c" value='#[%dw 2.0
+output application/java
+---
+"Flow GOODBYE:2 __"++ payload as String]'/>
+	</flow>
+</mule>
