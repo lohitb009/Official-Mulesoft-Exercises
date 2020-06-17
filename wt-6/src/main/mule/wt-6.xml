@@ -10,6 +10,18 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ffe992dd-ef38-472c-9b19-6ead058b3002" >
 		<http:request-connection host="localhost" port="8090" />
 	</http:request-config>
+	<flow name="privateFlow" doc:id="ff936f8a-99d3-4542-9199-7ba02ca2afb3" >
+		<http:request method="GET" doc:name="GET:localhost:8090/goodbye" doc:id="676c1f24-af30-406b-8cc0-20ae24f52caf" config-ref="HTTP_Request_configuration" path="/goodbye" responseTimeout="300000">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"fname" : attributes.queryParams.fname as String,
+	"lname"	: attributes.queryParams.lname as String,
+	"fullName": attributes.queryParams.fname as String ++ " " ++
+				attributes.queryParams.lname as String
+}]]]></http:query-params>
+		</http:request>
+	</flow>
 	<flow name="helloFlow" doc:id="ef83ffb1-c4c7-4471-aea1-02ca8b59175d" >
 		<http:listener doc:name="GET:localhost:8090/hello" doc:id="0af5e508-e0e1-4f37-bd4f-dfc558c651fb" config-ref="HTTP_Listener_config" path="/hello" allowedMethods="GET">
 			<http:response reasonPhrase="Hurray!!">
@@ -22,21 +34,15 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></http:headers>
 			</http:response>
 		</http:listener>
-		<set-variable value='#[(attributes.queryParams.fname as String ++ " " ++ 
- attributes.queryParams.lname as String) as String]' doc:name="fullName" doc:id="bac4695c-163f-4731-8ed1-ec292ff70fdc" variableName="fullName"/>
-		<set-payload value="#['Hello']" doc:name="Hello" doc:id="8eb64cee-03bb-4794-bab9-75a9a3fd5f35" />
-		<http:request method="GET" doc:name="GET:localhost:8090/goodbye" doc:id="676c1f24-af30-406b-8cc0-20ae24f52caf" config-ref="HTTP_Request_configuration" path="/goodbye" responseTimeout="300000">
-			<http:query-params ><![CDATA[#[output application/java
----
-{
-	"fname" : attributes.queryParams.fname as String,
-	"lname"	: attributes.queryParams.lname as String,
-	"fullName": attributes.queryParams.fname as String ++ " " ++
-				attributes.queryParams.lname as String
-}]]]></http:query-params>
-		</http:request>
+		<flow-ref doc:name="Flow Reference: call subflow" doc:id="54943e2e-efaa-45de-b71b-3336e0a32edd" name="wt-6Sub_Flow"/>
+		<flow-ref doc:name="Flow Reference- private flow" doc:id="02460c45-7d32-4952-8c41-911960c75581" name="privateFlow" />
 		<logger level="INFO" doc:name="Logger" doc:id="407eb47e-b399-4dfc-857c-13fb19a123b5" message="#[payload]"/>
 	</flow>
+	<sub-flow name="wt-6Sub_Flow" doc:id="9e490fd3-c142-45e8-9699-d7ae990056ea" >
+		<set-variable value="#[(attributes.queryParams.fname as String default 'NULL' ++ &quot; &quot; ++ 
+ attributes.queryParams.lname as String default 'NULL') as String]" doc:name="fullName" doc:id="bac4695c-163f-4731-8ed1-ec292ff70fdc" variableName="fullName" />
+		<set-payload value="#['Hello ' ++ vars.fullName as String]" doc:name="Hello" doc:id="8eb64cee-03bb-4794-bab9-75a9a3fd5f35" />
+	</sub-flow>
 	<flow name="goodbyeFlow" doc:id="0e33755b-b173-491d-b358-947f7455fdf4" >
 		<http:listener doc:name="GET:localhost:8090/goodbye" doc:id="9d45fd07-6f6f-48fd-99ad-b22ce15b3443" config-ref="HTTP_Listener_config" path="/goodbye" allowedMethods="GET">
 			<http:response >
